@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Задачи{% endblock %}
+
+{% block main_content %}
+  <h1>Текущие задачи</h1>
+    <ul class="list-inline">
+      Категории:
+    {% for cat in categories %}
+      <li class="list-inline-item">
+        <span class="badge badge-info"><a href={% url "tasks:list_by_cat" cat.slug %}> {{ cat.name }}</a></span>
+      </li>
+    {% endfor %}
+    </ul>
+  <ul id="todo-list">
+  {% for task in tasks %}
+      {% if task.is_completed %}
+        <li class="completed">
+          <input class='checkbox' data-uid={{ task.id }} type='checkbox' disabled='disabled' checked='checked'/>
+      {% elif not task.is_completed %}
+      <li class="completed">
+        <input class='checkbox' data-uid={{ task.id }} type='checkbox' disabled='disabled'/>
+      {% endif %}
+      {% if task.priority == 1 %}
+        <span class="badge badge-pill badge-danger">&nbsp;</span>
+      {% elif task.priority == 2 %}
+        <span class="badge badge-pill badge-secondary">&nbsp;</span>
+      {% elif task.priority == 3 %}
+        <span class="badge badge-pill badge-success">&nbsp;</span>
+      {% endif %}
+        <a href={% url "tasks:details" task.id %}>{{ task.description }}</a>
+      <hr/>
+    </li>
+  {% endfor %}
+  </ul>
+{% endblock %}
